@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Binary Waterfall
+Comment=Raw data media player
+Exec=binary-waterfall
+Icon=binary-waterfall
+Terminal=false
+Categories=AudioVideo;

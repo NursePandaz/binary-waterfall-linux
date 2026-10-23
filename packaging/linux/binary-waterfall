@@ -1,0 +1,3 @@
+#!/bin/sh
+export PYTHONPATH=/usr/share/binary-waterfall
+exec /usr/bin/python3 -m binary_waterfall "$@"

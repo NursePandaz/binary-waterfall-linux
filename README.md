@@ -1,96 +1,73 @@
 # Binary Waterfall for Linux
 
-Linux installer for **Binary Waterfall**, a raw data media player originally created by Ella Jameson ([nimaid](https://github.com/nimaid)).
+A raw data media player originally created by **Ella Jameson ([nimaid](https://github.com/nimaid))**.
+This repository contains the original application source with documented Linux changes,
+Debian packaging, and tests. The upstream **GPL v3** license is preserved in [LICENSE](LICENSE).
 
-## Download
+## Download and install
 
-[**Download Binary Waterfall 3.7.0-1 for Linux (.deb, amd64)**](https://github.com/NursePandaz/binary-waterfall-linux/releases/download/v3.7.0-1/binary-waterfall_3.7.0-1_amd64.deb)
+[**Download 3.7.0-3 (.deb)**](https://github.com/NursePandaz/binary-waterfall-linux/releases/download/v3.7.0-3/binary-waterfall_3.7.0-3_all.deb)
 
-The installer is approximately 85 MB and targets Debian/Ubuntu-based distributions, including Linux Mint, on 64-bit Intel/AMD (amd64 / x86-64) computers. It is not an ARM package.
+Target: Linux Mint 22 / Ubuntu 24.04 with Python 3.12. Only x86-64 has been tested.
+APT installs system dependencies, so an internet connection may be needed during installation.
 
-See [all releases](https://github.com/NursePandaz/binary-waterfall-linux/releases) for available downloads.
+```bash
+cd ~/Downloads
+sudo apt install ./binary-waterfall_3.7.0-3_all.deb
+binary-waterfall
+```
 
-## Installation
+Alternatively open the downloaded package with your distribution's package installer.
 
-1. Download the `.deb` installer above.
-2. Open a terminal in the folder containing the downloaded file. If your browser saved it to Downloads:
-
-   ```bash
-   cd ~/Downloads
-   ```
-
-3. Install the package:
-
-   ```bash
-   sudo apt install ./binary-waterfall_3.7.0-1_amd64.deb
-   ```
-
-   Enter your password when prompted. APT will install any required dependencies available from your configured repositories.
-
-4. Launch Binary Waterfall:
-
-   ```bash
-   binary-waterfall
-   ```
-
-Alternatively, open the downloaded `.deb` file with your distribution's package installer and choose **Install**.
-
-### Uninstall
+Uninstall:
 
 ```bash
 sudo apt remove binary-waterfall
 ```
 
-## Credits and attribution
+## Source, build and verification
 
-**Original creator: [nimaid](https://github.com/nimaid).** All credit for the original Binary Waterfall application belongs to nimaid and the upstream contributors.
+[Build instructions](BUILDING.md) · [Linux changes and upstream revision](UPSTREAM.md) · [Test results](TESTING.md)
 
-- [Original Binary Waterfall source and documentation](https://github.com/nimaid/binary-waterfall)
-- [Original project on itch.io](https://nimaid.itch.io/binary-waterfall)
+The installer contains the application Python source directly. Every installed application
+source/resource file is checked against this repository with `packaging/linux/verify-payload.py`.
+The release tag and source archive identify the source for the installer.
 
-This repository distributes the Linux installer; the original application is developed in the upstream project linked above.
+Download `SHA256SUMS` from the [release page](https://github.com/NursePandaz/binary-waterfall-linux/releases/tag/v3.7.0-3),
+place it next to the downloaded assets, and check them with:
 
-The [upstream attribution instructions](https://github.com/nimaid/binary-waterfall#attribution) require credit when you use Binary Waterfall to make videos or other projects, including commercial projects. Include this statement in your video description or project references:
+```bash
+sha256sum --ignore-missing -c SHA256SUMS
+```
+
+**Version distinction:** this new 3.7.0-3 release replaces the older 3.7.0-1 frozen installer.
+It does not claim to reproduce that older binary. The missing 3.7.0-2 archive is not used.
+
+## Troubleshooting
+
+Run `binary-waterfall` in a terminal to capture startup errors. Use APT for installation
+so dependencies are resolved. Python 3.13+ is not supported by this release.
+Physical audio playback has not been verified; see [testing limitations](TESTING.md).
+
+[Report Linux packaging issues](https://github.com/NursePandaz/binary-waterfall-linux/issues)
+with your package version, distribution, architecture, reproduction steps and error text.
+Remove private information before posting.
+
+## Credits and license
+
+Original author: **Ella Jameson (nimaid)** and upstream contributors.
+
+- [Original source and documentation](https://github.com/nimaid/binary-waterfall)
+- [Original itch.io page](https://nimaid.itch.io/binary-waterfall)
+- [GPL v3 license](LICENSE)
+
+Linux changes dated October 22, 2026 are described in [UPSTREAM.md](UPSTREAM.md).
+System dependencies retain their respective licenses. GPL v3 permits commercial use;
+this repository adds no noncommercial restriction.
+
+The upstream README requests the following attribution in videos or projects made with Binary Waterfall:
 
 ```text
 Made with the help of Binary Waterfall:
 https://github.com/nimaid/binary-waterfall
 ```
-
-## Source and build instructions
-
-See [BUILDING.md](BUILDING.md) for upstream source and Python build steps. **The exact modified source and packaging scripts for this 3.7.0-1 installer are not yet available here.** The automatic GitHub source archives contain repository documentation, not the application source.
-
-## License
-
-Binary Waterfall's upstream [GNU GPL version 3 license](LICENSE) is preserved in this repository. Original author: **Ella Jameson ([nimaid](https://github.com/nimaid))**. Dependencies retain their respective licenses. See [source availability](BUILDING.md#source-locations) for the current source gap.
-
-## Verify your download
-
-Run this in the folder containing the installer:
-
-```bash
-sha256sum binary-waterfall_3.7.0-1_amd64.deb
-```
-
-Expected SHA-256:
-
-```text
-ed4e3a95ffa38527b4d932aa961096e6c2b5839b6695dc7a4b7628ef5e4a9c9e
-```
-
-## Compatibility and testing
-
-- Package architecture: amd64 (64-bit Intel/AMD).
-- Original target: Linux Mint 22 / Ubuntu 24.04.
-- Package metadata and SHA-256 have been inspected. A fresh installation, physical audio playback, and export tests for this exact installer have not been performed during this publication work.
-- Tests reported for the separate 3.7.0-2 rebuild do not validate this 3.7.0-1 installer.
-
-## Troubleshooting and support
-
-- **Wrong architecture:** this installer requires amd64; it is not an ARM package.
-- **Dependency installation errors:** use the `sudo apt install ./...deb` command above so APT can resolve the package's declared dependencies.
-- **App does not open:** run `binary-waterfall` in a terminal and include the error text in an issue.
-- **Audio/export problems:** the package declares FFmpeg, PulseAudio integration, and GStreamer plugins as dependencies. Include your distribution/version and whether the problem affects playback or export when reporting it.
-
-[Report a Linux packaging issue](https://github.com/NursePandaz/binary-waterfall-linux/issues). Include the installer version, distribution/version, architecture, steps to reproduce, and relevant error text; remove personal file paths or other private details before posting.

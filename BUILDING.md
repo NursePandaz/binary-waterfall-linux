@@ -1,33 +1,41 @@
-# Source and build status
+# Build the Linux package
 
-## Source locations
-
-Original application: [nimaid/binary-waterfall](https://github.com/nimaid/binary-waterfall), by Ella Jameson (nimaid).
-
-The exact modified source and packaging scripts for the published `3.7.0-1_amd64.deb` have not yet been recovered and committed here. Upstream source alone is not a verified reproduction of this Linux installer. GitHub's automatically generated source ZIP/tar archives currently contain this repository's documentation, not the application source.
-
-An earlier development session produced a separate `3.7.0-2` rebuild and source archive. That is a different build and must not be presented as the source for the published `3.7.0-1` installer.
-
-## Building upstream Python distributions
-
-These commands describe a conventional Python source/wheel build of the upstream application, not a rebuild of this repository's Debian installer. They have not been run or validated for this release.
+Target: Linux Mint 22 / Ubuntu 24.04 with Python 3.12. The package uses system
+Python packages and FFmpeg; no frozen executable or private runtime is bundled.
 
 ```bash
-git clone https://github.com/nimaid/binary-waterfall.git
-cd binary-waterfall
-# Check out the upstream revision you intend to build.
-python3 -m venv .venv
-. .venv/bin/activate
-python -m pip install --upgrade pip build
-python -m build
+sudo apt install git dpkg-dev python3-pyqt5 python3-pyqt5.qtmultimedia python3-pydub python3-pil python3-yaml ffmpeg libqt5multimedia5-plugins gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-pulseaudio
+git clone https://github.com/NursePandaz/binary-waterfall-linux.git
+cd binary-waterfall-linux
+git checkout v3.7.0-3
+sh packaging/linux/build-deb.sh
+sudo apt install ./dist/binary-waterfall_3.7.0-3_all.deb
+binary-waterfall
 ```
 
-The upstream project uses setuptools and declares its dependencies in `pyproject.toml`. Desktop/Qt runtime libraries and FFmpeg may also be needed to run the application. Record the chosen commit, Python version, and dependency versions for any build you distribute.
+Build does not need root or network access once the source and `dpkg-deb` are available.
+Dependencies are resolved by APT at installation. Python 3.13+ is excluded because
+Pydub uses the removed `audioop` module. The `all` architecture refers to the
+Python-only package; validation has only been performed on x86-64 Linux.
 
-## Reproducing the Linux installer
+## Verify installer source
 
-Pending recovery of the exact Linux source, patches, dependency versions, and packaging scripts. No reproducible `.deb` build command is claimed at this time.
+```bash
+mkdir -p extracted
+dpkg-deb -x dist/binary-waterfall_3.7.0-3_all.deb extracted
+python3 packaging/linux/verify-payload.py extracted
+```
 
-## License and source distribution
+The verifier compares every installed application source/resource file with `src/`,
+checks for unexpected files, and checks the launcher, desktop file, license and provenance.
+The release includes `SHA256SUMS` for the package and source archive.
+This establishes payload/source correspondence; byte-for-byte reproducibility of
+Debian archive metadata across different build environments is not claimed.
 
-The upstream license is preserved verbatim in [LICENSE](LICENSE). Retain upstream copyright and attribution notices. Adding a license copy or an upstream link does not supply the missing modified source or establish a complete source distribution for the installer.
+## Tests
+
+```bash
+QT_QPA_PLATFORM=offscreen PYTHONPATH=src python3 -m unittest discover -s tests -v
+```
+
+See TESTING.md and UPSTREAM.md for validation scope and Linux changes.
